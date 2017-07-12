@@ -22,14 +22,32 @@ function RapidProAPIClient() {
 }
 
 RapidProAPIClient.prototype.pullRPdata = function() {
-  request.get({
-      url: contactsUrl,
-      headers: { 'Authorization': config.rapidProAPIKEY }
-    },
-    function(error, response, body) {
-      console.log('response');
-      console.log(body)
-    });
+  while (this.nextPage) {
+    request.get({
+        url: contactsUrl,
+        headers: { 'Authorization': config.rapidProAPIKEY }
+      },
+      function(error, response, body) {
+        console.log('response');
+
+        if (response.ok) {
+          console.log('Loading Page ' + str(this.page))
+
+          var nextUrl = response['next']
+          var results = r['results']
+          $.each(results, function(index, value) {
+            var user = value;
+            // save user data
+          });
+        }
+        if (nextUrl) {
+          this.page += 1
+          this.url = next_url
+        } else {
+          self.next_page = False
+        }
+      });
+  }
 };
 
 var RPClient = new RapidProAPIClient()
