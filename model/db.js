@@ -5,4 +5,7 @@ var userResultSchema = new mongoose.Schema({
   result: Object
 });
 
-mongoose.model('userResult', userResultSchema);
+var userResult = mongoose.model('userResult', userResultSchema);
+module.exports = {userResult};
+
+
