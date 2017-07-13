@@ -2,11 +2,10 @@ require('dotenv').config()
 
 var request = require('request')
 var db = require('../model/db');
+
+
 var userResult = db.userResult
 var contactsUrl = 'https://rapidbot.io/api/v2/contacts.json'
-
-console.log('null user')
-
 
 
 var http = require("http");
@@ -32,15 +31,28 @@ RapidProAPIClient.prototype.pullRPdata = function(callback) {
     function(error, response, body) {
       if (error) return callback(error);
 
+      console.log('Loading Page ' + toString(this.page))
 
-      // fluffy.save(function (err, fluffy) {
-      //   if (err) return console.error(err);
-      //   fluffy.speak();
-      // });
+      var responseData = JSON.parse(body)
+      console.log(JSON.stringify(responseData))
+      var results = responseData.results
+      for (var i = 0; i < results.length; i++) {
+        var user = results[i];
+        // store as object 
 
-      console.log('response');
-      console.log(body)
+        var userData = new userResult(user);
+        userData.save()
+          .then(item => {
+            console.log("item saved to database");
+          })
+          .catch(err => {
+            console.log('Error! User could not be saved.');
+          });
+      }
     });
+    return function(){
+      console.log('done!')
+    } 
 };
 
 function seedDB(callback) {
@@ -51,9 +63,9 @@ function seedDB(callback) {
     // if there's no data, run this script! 
     if (!results) {
       var RPClient = new RapidProAPIClient()
-      RPClient.pullRPdata(function(err, results){
-          if (err) return callback(err); 
-          console.log('DB seeded!')
+      RPClient.pullRPdata(function(err, results) {
+        if (err) return callback(err);
+        console.log('DB seeded!')
       })
     }
 
@@ -66,3 +78,6 @@ module.exports = {
   RapidProAPIClient: RapidProAPIClient,
   seedDB: seedDB,
 }
+
+var RPClient = new RapidProAPIClient()
+RPClient.pullRPdata()
