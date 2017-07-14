@@ -75,12 +75,14 @@ function seedDB(callback) {
 
     // if there's no data, run this script! 
     if (!results) {
-      var RPClient = new RapidProAPIClient()
-      RPClient.pullRPdata(function(err, results) {
-        if (err) return callback(err);
-        console.log('DB seeded!')
-      })
+      db.getCollection('userresults').remove({})
     }
+    
+    var RPClient = new RapidProAPIClient()
+    RPClient.pullRPdata(function(err, results) {
+      if (err) return callback(err);
+      console.log('DB seeded!')
+    })
 
   });
 
@@ -89,5 +91,5 @@ function seedDB(callback) {
 
 module.exports = {
   RapidProAPIClient: RapidProAPIClient,
-  seedDB: seedDB,
+  seedDB: seedDB
 }
