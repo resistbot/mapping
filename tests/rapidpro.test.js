@@ -1,5 +1,5 @@
 var test = require('tape');
-var rp = require('../bin/pull_rapidpro_data.js')
+var rp = require('../rapidPro/rapidProAPI.js')
 var sinon = require('sinon');
 var request = require('request')
 
