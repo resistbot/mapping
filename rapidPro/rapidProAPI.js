@@ -2,6 +2,8 @@ require('dotenv').config()
 
 var request = require('request')
 var db = require('../model/db');
+var mongoose = require('mongoose');
+
 
 
 var userResult = db.userResult
@@ -35,7 +37,7 @@ RapidProAPIClient.prototype.pullRPdata = function(callback) {
       console.log('Loading Page ' + toString(self.page))
 
       var responseData = JSON.parse(body);
-      // console.log(JSON.stringify(responseData, null, 2)); 
+      console.log(JSON.stringify(responseData, null, 2));
       // console.log(body); 
       var results = responseData.results;
       for (var i = 0; i < results.length; i++) {
@@ -43,7 +45,7 @@ RapidProAPIClient.prototype.pullRPdata = function(callback) {
 
         var user = {
           'uuid': result.uuid,
-          'address': result.fields.address,
+          'address': result.fields.postal_address,
           'state': result.fields.state,
           'zip': result.fields.zip,
           'rep': result.fields.representative,
@@ -52,7 +54,7 @@ RapidProAPIClient.prototype.pullRPdata = function(callback) {
         };
 
         var userData = new userResult(user);
-        console.log(userData)
+        // console.log(userData)
         userData.save()
           .then(item => {
             console.log("item saved to database");
@@ -74,10 +76,12 @@ function seedDB(callback) {
     if (err) return callback(err)
 
     // if there's no data, run this script! 
-    if (!results) {
-      db.getCollection('userresults').remove({})
+    if (results) {
+      mongoose.connection.db.dropCollection('userresults', function(err, result) {
+        if (err) return callback(err);
+        console.log(result)
+      });
     }
-    
     var RPClient = new RapidProAPIClient()
     RPClient.pullRPdata(function(err, results) {
       if (err) return callback(err);
