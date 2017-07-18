@@ -18,6 +18,8 @@ block content
       mapboxgl.accessToken=!{JSON.stringify(accessToken)};
         var map = new mapboxgl.Map({
         container: 'map',
+        center: [-87.6500523,41.850033], // starting position
+        zoom: 3, // starting zoom
         style: 'mapbox://styles/amillzpaugh/cj58rtpoh59pj2snwdbajw3mv'
         });
       }
