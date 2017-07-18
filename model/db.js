@@ -8,7 +8,9 @@ var userResultSchema = new mongoose.Schema({
 	zip: Number, 
 	rep: String, 
 	sen_jr: String, 
-	sen_sr: String
+	sen_sr: String, 
+	total_faxes: Number,
+	total_emails:Number
 });
 
 var userResult = mongoose.model('userResult', userResultSchema);
