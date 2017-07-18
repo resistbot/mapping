@@ -2,4 +2,23 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Resistbot User Data by Location
+
+  #container.col
+    if youAreUsingJade
+      p You are amazing
+    else
+      p 
+
+    .container
+      div#map
+
+    script(type='text/javascript').
+      {
+      mapboxgl.accessToken=!{JSON.stringify(accessToken)};
+        var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/amillzpaugh/cj58rtpoh59pj2snwdbajw3mv'
+        });
+      }
+
