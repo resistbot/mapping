@@ -12,7 +12,7 @@ function retrieveStateLevelUserData() {
   var stateDataStore = {}
   var stateAbbreviations = Object.keys(usStates.stateAbbreviations)
 
-  for (i in stateAbbreviations) {
+  for (var i in stateAbbreviations) {
       var state = stateAbbreviations[i]
       userResult.count({ "state": state }, function(err, count) {
         console.log(state, count)
