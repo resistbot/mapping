@@ -3,49 +3,38 @@ var db = require('../model/db');
 var mongoose = require('mongoose');
 var usStates = require('../utils/stateLookUp');
 var userResult = db.userResult
+var d3 = require('d3-queue');
+
 
 module.exports = {
-  retrieveStateLevelUserData: retrieveStateLevelUserData
+  retrieveStateLevelUserData: retrieveStateLevelUserData,
+  returnStateCount: returnStateCount
 }
 
-function retrieveStateLevelUserData() {
-  var stateDataStore = {}
+var stateDataStore = {}
+
+function returnStateCount(state) {
+  userResult.count({ "state": state }, function(err, count) {
+    // console.log(state, count); 
+    stateDataStore.state = count
+  });
+}
+
+function retrieveStateLevelUserData(callback) {
   var stateAbbreviations = Object.keys(usStates.stateAbbreviations)
+  var q = d3.queue(50)
 
   for (var i in stateAbbreviations) {
-      var state = stateAbbreviations[i]
-      userResult.count({ "state": state }, function(err, count) {
-        console.log(state, count)
-        stateDataStore[state] = count
-      })
+    var state = stateAbbreviations[i];
+    q.defer(returnStateCount, state)
+    // console.log(state)
   }
-  console.log(state)
 
-  console.log(stateDataStore)
-
+  q.awaitAll(function(err, results) {
+    console.log('hi')
+    if (err) return callback(err);
+    
+    return callback(null, stateDataStore);
+  });
 }
-console.log(stateDataStore)
-return stateDataStore
-}
 
-
-
-
-
-
-// var users = mongoose.connection
-
-
-// function readStateFile(){
-// 	// read file 
-// 	// get state long name 
-
-// }
-
-// function getStateLongName(){
-// 	for (var key in myDictionary) {
-//     var value = myDictionary[key];
-//     // Use `key` and `value`
-// }
-
-// }
