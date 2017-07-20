@@ -7,34 +7,22 @@ var d3 = require('d3-queue');
 var usStates = require('../utils/stateLookUp');
 
 module.exports = {
-  retrieveStateLevelUserData: retrieveStateLevelUserData,
-  returnStateCount: returnStateCount
+  retrieveUserData: retrieveUserData
 }
 
-var stateDataStore = []
+function retrieveUserData(queryFilter, callback) {
+  userResult.aggregate(
+    [{
+      $group: {
+        // region is $state or $rep to query data
+        _id: queryFilter,
+        totalFaxes: { $sum: "$total_faxes" },
+        totalEmails: { $sum: "$total_emails" },
+        userCount: { $sum: 1 }
 
-function returnStateCount(state, callback) {
-  userResult.count({ "state": state }, function(err, count) {
-    console.log(state, count); 
-    var stateLongName = usStates.stateAbbreviations[state]
-    stateDataStore.push({'state':stateLongName.toUpperCase(), 'total_users':count}); 
-    return callback(err, count)
-  });
+      },
+    }],
+    function(err, result) {
+      return callback(err, result)
+    })
 }
-
-function retrieveStateLevelUserData(callback) {
-  var stateAbbreviations = Object.keys(usStates.stateAbbreviations)
-  var q = d3.queue(5)
-
-  for (var i in stateAbbreviations) {
-    var state = stateAbbreviations[i];
-    q.defer(returnStateCount, state); 
-  }
-
-  q.awaitAll(function(err, results) {
-    console.log('hi'); 
-    if (err) return callback(err);
-    return callback(null, stateDataStore);
-  });
-}
-
