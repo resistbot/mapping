@@ -11,29 +11,29 @@ module.exports = {
   returnStateCount: returnStateCount
 }
 
-var stateDataStore = {}
+var stateDataStore = []
 
-function returnStateCount(state) {
+function returnStateCount(state, callback) {
   userResult.count({ "state": state }, function(err, count) {
-    // console.log(state, count); 
-    stateDataStore.state = count
+    console.log(state, count); 
+    stateDataStore.push({'state':state, 'total_users':count}); 
+    return callback(err, count)
   });
 }
 
 function retrieveStateLevelUserData(callback) {
   var stateAbbreviations = Object.keys(usStates.stateAbbreviations)
-  var q = d3.queue(50)
+  var q = d3.queue(5)
 
   for (var i in stateAbbreviations) {
     var state = stateAbbreviations[i];
-    q.defer(returnStateCount, state)
+    q.defer(returnStateCount, state); 
     // console.log(state)
   }
 
   q.awaitAll(function(err, results) {
-    console.log('hi')
+    console.log('hi'); 
     if (err) return callback(err);
-    
     return callback(null, stateDataStore);
   });
 }
