@@ -11,18 +11,18 @@ var userResult = db.userResult
 
 test('state db query returns number of users from a state', function(assert) {
   var response = [{ _id: 'WY', totalMessages: 78, count: 1 },
-      { _id: 'AL', totalMessages: 76, count: 3 },
-      { _id: 'OK', totalMessages: 279, count: 2 },
-      { _id: 'LA', totalMessages: 349, count: 5 }
-    ]
+    { _id: 'AL', totalMessages: 76, count: 3 },
+    { _id: 'OK', totalMessages: 279, count: 2 },
+    { _id: 'LA', totalMessages: 349, count: 5 }
+  ]
 
-  sinon.stub(userResult, 'aggregate').callsFake(function(queryFilter,callback) {
+  sinon.stub(userResult, 'aggregate').callsFake(function(queryFilter, callback) {
 
     return callback(null, response)
-  }); 
+  });
 
   stateDataMerge.retrieveUserData('$state', function(err, result) {
-  	console.log(err)
+    console.log(err)
     assert.equal(result[0].userCount, 1)
 
     assert.end()
