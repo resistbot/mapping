@@ -10,7 +10,9 @@ fs = require('fs');
 
 module.exports = {
   retrieveUserData: retrieveUserData,
-  fileReader: fileReader
+  fileReader: fileReader,
+  generateStateDataFile: generateStateDataFile,
+  writeGeoJSONFile: writeGeoJSONFile
 }
 
 function retrieveUserData(queryFilter, callback) {
@@ -33,15 +35,44 @@ function retrieveUserData(queryFilter, callback) {
 }
 
 
-function fileReader(path, callback){
-  fs.readFile(path, 'utf8', function (err,data) {
-  if (err) return callback(err)
-  return callback(null, JSON.parse(data))
-});
+function fileReader(path, callback) {
+  fs.readFile(path, 'utf8', function(err, data) {
+    if (err) return callback(err)
+
+    return callback(null, JSON.parse(data))
+  });
 }
 
+function writeGeoJSONFile(path, data) {
+  var dataStream = JSON.stringify(data)
+  fs.writeFile(path, dataStream, function(err) {
+    if (err) throw err;
+    console.log('It\'s saved!');
+  });
+  return true
+}
 
-// function generateStateDataFile(data, callback){
-//     for 
+function generateStateDataFile(geojsonData, userData, callback) {
 
-// }
+  var updatedGeoJSON = {
+    "type": "FeatureCollection",
+    "features": []
+  }
+
+  for (i in geojsonData.features) {
+    for (u in userData) {
+      var geojsonState = geojsonData.features[i].properties.NAME.toUpperCase()
+      var userStateData = usStates.stateAbbreviations[userData[u]['_id']].toUpperCase()
+
+      if (userStateData === geojsonState) {
+        var rbfaxes = userData[u]['totalFaxes']
+        var rbusers = userData[u]['userCount']
+        geojsonData.features[i].properties.totalFaxes = rbfaxes
+        geojsonData.features[i].properties.totalUsers = rbusers
+
+        updatedGeoJSON.features.push(geojsonData.features[i])
+      }
+    }
+  }
+  callback(null, updatedGeoJSON)
+}
