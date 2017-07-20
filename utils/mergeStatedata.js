@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var usStates = require('../utils/stateLookUp');
 var userResult = db.userResult
 var d3 = require('d3-queue');
-
+var usStates = require('../utils/stateLookUp');
 
 module.exports = {
   retrieveStateLevelUserData: retrieveStateLevelUserData,
@@ -16,7 +16,8 @@ var stateDataStore = []
 function returnStateCount(state, callback) {
   userResult.count({ "state": state }, function(err, count) {
     console.log(state, count); 
-    stateDataStore.push({'state':state, 'total_users':count}); 
+    var stateLongName = usStates.stateAbbreviations[state]
+    stateDataStore.push({'state':stateLongName.toUpperCase(), 'total_users':count}); 
     return callback(err, count)
   });
 }
@@ -28,7 +29,6 @@ function retrieveStateLevelUserData(callback) {
   for (var i in stateAbbreviations) {
     var state = stateAbbreviations[i];
     q.defer(returnStateCount, state); 
-    // console.log(state)
   }
 
   q.awaitAll(function(err, results) {
