@@ -23,6 +23,8 @@ function retrieveUserData(queryFilter, callback) {
       },
     }],
     function(err, result) {
-      return callback(err, result)
+      if (err) return callback(err);
+      console.log(err)
+      return callback(null, result)
     })
 }
