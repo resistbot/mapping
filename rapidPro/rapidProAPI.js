@@ -44,7 +44,6 @@ RapidProAPIClient.prototype.pullRPdata = function(callback) {
         var result = results[i]
         var faxes = result.fields.total_faxes_sent
         var emails = result.fields.total_emails_sent
-        console.log(typeof faxes)
 
         var user = {
           'uuid': result.uuid,
@@ -92,7 +91,7 @@ function seedDB(callback) {
     var RPClient = new RapidProAPIClient()
     RPClient.pullRPdata(function(err, results) {
       if (err) return callback(err);
-      return console.log('DB seeded!')
+      console.log('DB seeded!')
     })
   });
 

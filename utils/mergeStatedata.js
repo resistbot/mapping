@@ -5,9 +5,12 @@ var usStates = require('../utils/stateLookUp');
 var userResult = db.userResult
 var d3 = require('d3-queue');
 var usStates = require('../utils/stateLookUp');
+fs = require('fs');
+
 
 module.exports = {
-  retrieveUserData: retrieveUserData
+  retrieveUserData: retrieveUserData,
+  fileReader: fileReader
 }
 
 function retrieveUserData(queryFilter, callback) {
@@ -24,7 +27,21 @@ function retrieveUserData(queryFilter, callback) {
     }],
     function(err, result) {
       if (err) return callback(err);
-      console.log(err)
+      // console.log(err)
       return callback(null, result)
     })
 }
+
+
+function fileReader(path, callback){
+  fs.readFile(path, 'utf8', function (err,data) {
+  if (err) return callback(err)
+  return callback(null, JSON.parse(data))
+});
+}
+
+
+// function generateStateDataFile(data, callback){
+//     for 
+
+// }
