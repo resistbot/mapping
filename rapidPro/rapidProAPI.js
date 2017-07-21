@@ -90,7 +90,6 @@ function seedDB(callback) {
       if (err) return callback(err);
       console.log('DB seeded!')
     })
-    return 'done'
   });
 
 }
