@@ -29,7 +29,7 @@ function retrieveUserData(queryFilter, callback) {
     }],
     function(err, result) {
       if (err) return callback(err);
-      // console.log(err)
+      console.log(err)
       return callback(null, result)
     })
 }
@@ -39,7 +39,7 @@ function fileReader(path, callback) {
   fs.readFile(path, 'utf8', function(err, data) {
     if (err) return callback(err)
 
-    return callback(null, JSON.parse(data))
+    return callback(err, JSON.parse(data))
   });
 }
 
@@ -48,8 +48,8 @@ function writeGeoJSONFile(path, data) {
   fs.writeFile(path, dataStream, function(err) {
     if (err) throw err;
     console.log('It\'s saved!');
+    return true
   });
-  return true
 }
 
 function generateStateDataFile(geojsonData, userData, callback) {
@@ -58,21 +58,27 @@ function generateStateDataFile(geojsonData, userData, callback) {
     "type": "FeatureCollection",
     "features": []
   }
+  geojsonData.features.forEach(function(g) {
+    userData.forEach(function(u) {
+      var geojsonState = g.properties.NAME.toUpperCase()
+      var StateDataID = usStates.stateAbbreviations[u["_id"]]
+      // console.log(StateDataID)
+      // handles corrupted rapid pro data with ID null
+      letterCheck = /^[a-zA-Z]+$/.test(StateDataID);
+      if (!StateDataID || letterCheck === false){
+      }else{
+        var userStateData = StateDataID.toUpperCase()
 
-  for (i in geojsonData.features) {
-    for (u in userData) {
-      var geojsonState = geojsonData.features[i].properties.NAME.toUpperCase()
-      var userStateData = usStates.stateAbbreviations[userData[u]['_id']].toUpperCase()
+      }
 
       if (userStateData === geojsonState) {
-        var rbfaxes = userData[u]['totalFaxes']
-        var rbusers = userData[u]['userCount']
-        geojsonData.features[i].properties.totalFaxes = rbfaxes
-        geojsonData.features[i].properties.totalUsers = rbusers
+          g.properties.totalFaxes = u.totalFaxes
+          g.properties.totalUsers = u.userCount
+          updatedGeoJSON.features.push(g)
+        
 
-        updatedGeoJSON.features.push(geojsonData.features[i])
       }
-    }
-  }
+    });
+  });
   callback(null, updatedGeoJSON)
 }

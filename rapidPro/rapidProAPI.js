@@ -75,14 +75,11 @@ RapidProAPIClient.prototype.pullRPdata = function(callback) {
 };
 
 function seedDB(callback) {
-  // look up actual syntax 
   userResult.find({}, function(err, results) {
-    console.log(results)
     if (err) return callback(err)
 
-    // if there's no data, run this script! 
-    if (results) {
-      console.log(false)
+    // if there's data, run this script! 
+    if (results.length === null) {
       mongoose.connection.db.dropCollection('userresults', function(err, result) {
         if (err) return callback(err);
         console.log(result)
@@ -93,6 +90,7 @@ function seedDB(callback) {
       if (err) return callback(err);
       console.log('DB seeded!')
     })
+    return 'done'
   });
 
 }
