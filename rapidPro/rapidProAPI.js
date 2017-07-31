@@ -26,19 +26,23 @@ function RapidProAPIClient() {
 }
 
 RapidProAPIClient.prototype.pullRPdata = function(callback) {
-  var self = this
-  request.get({
+  var self = this; 
+
+  if(self.nextPage){
+    request.get({
       url: contactsUrl,
       headers: { 'Authorization': config.rapidProAPIKEY }
     },
+
     function(error, response, body) {
       if (error) return callback(error);
 
-      console.log('Loading Page ' + toString(self.page))
-
       var responseData = JSON.parse(body);
-      console.log(JSON.stringify(responseData, null, 2));
-      // console.log(body); 
+      var nextURL = responseData['next']
+      var results = responseData['results']
+
+      console.log('Loading Page ' + JSON.stringify(self.page)); 
+
       var results = responseData.results;
       for (var i = 0; i < results.length; i++) {
         var result = results[i]
@@ -58,23 +62,30 @@ RapidProAPIClient.prototype.pullRPdata = function(callback) {
         };
 
         var userData = new userResult(user);
-        // console.log(userData)
         userData.save()
           .then(item => {
-            console.log("item saved to database");
+            // console.log("item saved to database");
           })
           .catch(err => {
             console.log('Error! User could not be saved.');
           });
       }
 
+      if (nextURL){
+        self.page += 1; 
+        self.url = nextURL;  
+        self.pullRPdata(); 
+      } else{
+        self.nextPage = false; 
+        return callback(null,"All items saved!");
+      }
+
+
     });
-  return function() {
-    console.log('done!')
   }
 };
 
-function seedDB(callback) {
+function seedDB() {
   userResult.find({}, function(err, results) {
     if (err) return callback(err)
 
@@ -82,13 +93,13 @@ function seedDB(callback) {
     if (results.length === null) {
       mongoose.connection.db.dropCollection('userresults', function(err, result) {
         if (err) return callback(err);
-        console.log(result)
+        console.log(result); 
       });
     }
     var RPClient = new RapidProAPIClient()
     RPClient.pullRPdata(function(err, results) {
       if (err) return callback(err);
-      console.log('DB seeded!')
+      console.log("DB seeded! " + results);
     })
   });
 
