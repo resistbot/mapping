@@ -58,6 +58,8 @@ function generateStateDataFile(geojsonData, userData, callback) {
     "type": "FeatureCollection",
     "features": []
   }
+
+  var maxMin = {}
   geojsonData.features.forEach(function(g) {
     userData.forEach(function(u) {
 
@@ -70,11 +72,11 @@ function generateStateDataFile(geojsonData, userData, callback) {
 
       }else{
         var userStateData = StateDataID.toUpperCase()
-        userStateData = userStateData.replace(" ","&")  
-        geojsonState = geojsonState.replace(" ","&")  
+        userStateData = userStateData 
+        geojsonState = geojsonState
 
-        console.log(userStateData)
-        console.log(geojsonState)
+        console.log(typeof userStateData)
+        console.log(typeof geojsonState)
 
       }
       console.log(userStateData)
@@ -84,7 +86,6 @@ function generateStateDataFile(geojsonData, userData, callback) {
           g.properties.totalFaxes = u.totalFaxes
           g.properties.totalUsers = u.userCount
           updatedGeoJSON.features.push(g)
-        
 
       }
     });

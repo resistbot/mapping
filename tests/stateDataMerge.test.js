@@ -103,13 +103,13 @@ test('userData appends to geojson property field', function(assert) {
   var userData = [{ _id: 'ME', totalFaxes: 78, userCount: 1 },
     { _id: 'CA', totalFaxes: 76, userCount: 3 },
     { _id: 'OK', totalFaxes: 279, userCount: 2 },
-    { _id: 'LA', totalFaxes: 349, userCount: 5 }
+    { _id: 'NY', totalFaxes: 349, userCount: 5 }
   ]
 
   stateDataMerge.generateStateDataFile(geoJsonData, userData, function(err, result) {
   	console.log(result.features)
     assert.equal(result.features[0].properties.totalUsers,1)
-  	assert.equal(result.features[1].properties.NAME,"Louisiana")
+  	assert.equal(result.features[1].properties.NAME,"New York")
     assert.end()
   })
 });
