@@ -12,24 +12,22 @@ function getMinOfArray(numArray) {
   return Math.min.apply(null, numArray);
 }
 
-function findMaxMin(){
-	var userCount = []
-	var faxCount = []
-	stateData.forEach(function(s){
-		userCount.push(Number(s.properties.totalUsers)); 
-		faxCount.push(Number(s.properties.totalFaxes)); 
+function findMaxMin() {
+  var userCount = []
+  var faxCount = []
+  stateData.forEach(function(s) {
+    userCount.push(Number(s.properties.totalUsers));
+    faxCount.push(Number(s.properties.totalFaxes));
 
-	});
-	console.log("Max Users!");
-	console.log(getMaxOfArray(userCount));
-	console.log("Min Users!");
-	console.log(getMinOfArray(userCount));
-	console.log("Max Faxes!");
-	console.log(getMaxOfArray(faxCount));
-	console.log("Min Faxes!");
-	console.log(getMinOfArray(faxCount));
+  });
+  console.log("Max Users!");
+  console.log(getMaxOfArray(userCount));
+  console.log("Min Users!");
+  console.log(getMinOfArray(userCount));
+  console.log("Max Faxes!");
+  console.log(getMaxOfArray(faxCount));
+  console.log("Min Faxes!");
+  console.log(getMinOfArray(faxCount));
 }
 
 findMaxMin()
- 
-
