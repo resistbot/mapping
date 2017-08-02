@@ -1,5 +1,26 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  nav#menu
+  #container.col
+    .container
+      div#map
+
+    script(type='text/javascript').
+      {
+      mapboxgl.accessToken=!{JSON.stringify(accessToken)};
+        var map = new mapboxgl.Map({
+        container: 'map',
+        center: [-87.6500523,41.850033], // starting position
+        zoom: 4, // starting zoom
+        style: 'mapbox://styles/amillzpaugh/cj58rtpoh59pj2snwdbajw3mv'
+        });
+      }
+
+  div#state-legend.legend
+    h4='Total Number of Users (in thousands)'
+    div
+      span.minUsers=0
+      span.maxUsers=50,00
+
+

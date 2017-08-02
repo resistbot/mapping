@@ -83,18 +83,33 @@ test('userData appends to geojson property field', function(assert) {
         "type": "MultiPolygon",
         "coordinates": []
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "GEO_ID": "0400000US23",
+        "STATE": "23",
+        "NAME": "New York",
+        "LSAD": "",
+        "CENSUSAREA": 30842.923
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": []
+      }
     }]
   }
 
   var userData = [{ _id: 'ME', totalFaxes: 78, userCount: 1 },
-    { _id: 'AL', totalFaxes: 76, userCount: 3 },
+    { _id: 'CA', totalFaxes: 76, userCount: 3 },
     { _id: 'OK', totalFaxes: 279, userCount: 2 },
     { _id: 'LA', totalFaxes: 349, userCount: 5 }
   ]
 
   stateDataMerge.generateStateDataFile(geoJsonData, userData, function(err, result) {
-  	
-  	assert.equal(result.features[0].properties.totalUsers,1)
+  	console.log(result.features)
+    assert.equal(result.features[0].properties.totalUsers,1)
+  	assert.equal(result.features[1].properties.NAME,"Louisiana")
     assert.end()
   })
 });

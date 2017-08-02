@@ -4,8 +4,6 @@ var request = require('request')
 var db = require('../model/db');
 var mongoose = require('mongoose');
 
-
-
 var userResult = db.userResult
 var contactsUrl = 'https://rapidbot.io/api/v2/contacts.json'
 
@@ -91,15 +89,18 @@ function seedDB() {
 
     // if there's data, run this script! 
     if (results.length === null) {
+      console.log(false)
       mongoose.connection.db.dropCollection('userresults', function(err, result) {
         if (err) return callback(err);
-        console.log(result); 
+        // console.log(result); 
       });
     }
     var RPClient = new RapidProAPIClient()
     RPClient.pullRPdata(function(err, results) {
       if (err) return callback(err);
+
       console.log("DB seeded! " + results);
+
     })
   });
 

@@ -60,17 +60,26 @@ function generateStateDataFile(geojsonData, userData, callback) {
   }
   geojsonData.features.forEach(function(g) {
     userData.forEach(function(u) {
+
       var geojsonState = g.properties.NAME.toUpperCase()
       var StateDataID = usStates.stateAbbreviations[u["_id"]]
-      // console.log(StateDataID)
+
       // handles corrupted rapid pro data with ID null
-      letterCheck = /^[a-zA-Z]+$/.test(StateDataID);
-      if (!StateDataID || letterCheck === false){
+      // letterCheck = /^[a-zA-Z]+$/.test(StateDataID);
+      if (!StateDataID){
+
       }else{
         var userStateData = StateDataID.toUpperCase()
+        userStateData = userStateData.replace(" ","&")  
+        geojsonState = geojsonState.replace(" ","&")  
+
+        console.log(userStateData)
+        console.log(geojsonState)
 
       }
-
+      console.log(userStateData)
+      console.log(geojsonState)
+      console.log(userStateData === geojsonState)
       if (userStateData === geojsonState) {
           g.properties.totalFaxes = u.totalFaxes
           g.properties.totalUsers = u.userCount
